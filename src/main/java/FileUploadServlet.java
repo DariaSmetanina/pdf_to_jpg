@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -24,8 +25,9 @@ public class FileUploadServlet extends HttpServlet {
 
         //get the InputStream to store the file somewhere
         InputStream fileInputStream = filePart.getInputStream();
+
         String filename=filePart.getSubmittedFileName();
-        String fileExtension=filePart.getSubmittedFileName().substring(filename.length()-4, filename.length());;
+        String fileExtension=filename.substring(filename.length()-4, filename.length());;
 
         if(!fileExtension.equals(".pdf")){
             response.getOutputStream().println("<p>NOT PDF</p>");
@@ -34,6 +36,7 @@ public class FileUploadServlet extends HttpServlet {
         //for example, you can copy the uploaded file to the server
         //note that you probably don't want to do this in real life!
         //upload it to a file host like S3 or GCS instead
+        filename=decodeGetParameter(filename.substring(0,filename.length()-4))+".pdf";
         File fileToSave = new File("C:/Users/Dasha/Desktop/res/" + filename);
         Files.copy(fileInputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
@@ -45,4 +48,9 @@ public class FileUploadServlet extends HttpServlet {
 
         response.getOutputStream().println("<p>File converted</p>");
         }
+
+    public static String decodeGetParameter(String parameter) throws UnsupportedEncodingException {
+        return new String(parameter.getBytes("Windows-1251"),"UTF8");
+    }
+
 }
