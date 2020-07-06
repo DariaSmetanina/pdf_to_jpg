@@ -5,6 +5,7 @@ import org.apache.pdfbox.tools.imageio.ImageIOUtil;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.Date;
 
 public class Convert {
 
@@ -18,16 +19,19 @@ public class Convert {
         PDDocument document = PDDocument.load(new File(filepath+filename));
         filename=filename.substring(0, filename.length()-4);;
         PDFRenderer pdfRenderer = new PDFRenderer(document);
-        ImageIO.setCacheDirectory(new File("C:/Users/Dasha/Desktop/res/"));
+        ImageIO.setCacheDirectory(new File(filepath));
+        String datetime=new Date().toString().replaceAll("[:.]", "");
         for (int page = 0; page < document.getNumberOfPages(); ++page) {
             BufferedImage bim = pdfRenderer.renderImageWithDPI(
                     page, 300, ImageType.RGB);
             ImageIOUtil.writeImage(
-                    bim, String.format(filepath+"JPG/"+filename+"-%d.%s", page + 1, extension), 300);
+                    bim, String.format(datetime+filepath+filename+"-%d "+".%s", page + 1, extension), 300);
 
             System.out.print("page"+page+"\n");
         }
         document.close();
+        File file = new File(filepath+filename+".pdf");
+        file.delete();
     }
 }
 
