@@ -25,7 +25,7 @@ public class Convert {
             BufferedImage bim = pdfRenderer.renderImageWithDPI(
                     page, 300, ImageType.RGB);
             ImageIOUtil.writeImage(
-                    bim, String.format(datetime+filepath+filename+"-%d "+".%s", page + 1, extension), 300);
+                    bim, String.format(filepath+datetime+" "+filename+"-%d "+".%s", page + 1, extension), 300);
 
             System.out.print("page"+page+"\n");
         }
